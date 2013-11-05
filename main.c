@@ -1,8 +1,11 @@
 #include <msp430.h> 
-#include "game.h"
+#include "game_shell/game.h"
 #include "buttons/button.h"
 #include "LCD/LCD.h"
 
+
+void init_timer();
+void init_buttons();
 /*
  * main.c
  */
@@ -16,15 +19,7 @@ int main(void) {
 	LCDclear();
 
 	init_timer();
-
-	configureP1PinAsButton(BIT0 | BIT1 | BIT2 | BIT4);
-	P1IE |= BIT0 | BIT1 | BIT2 | BIT4;                 // enable the interrupts
-	P1IES |= BIT0 | BIT1 | BIT2 | BIT4; // configure interrupt to sense falling edges
-
-//	P1REN |= BIT1 | BIT2 | BIT3;    // enable internal pull-up/pull-down network
-//	P1OUT |= BIT1 | BIT2 | BIT3;                   // configure as pull-up
-
-	P1IFG &= ~(BIT0 | BIT1 | BIT2 | BIT4);
+	init_buttons();
 	__enable_interrupt();
 	printPlayer(player);
 
@@ -52,4 +47,20 @@ int main(void) {
 	}
 
 	return 0;
+}
+//
+// YOUR TIMER A ISR GOES HERE
+//
+void init_timer(){
+	// do timer initialization work
+}
+void init_buttons() {
+	configureP1PinAsButton(BIT0 | BIT1 | BIT2 | BIT4);
+	P1IE |= BIT0 | BIT1 | BIT2 | BIT4;                 // enable the interrupts
+	P1IES |= BIT0 | BIT1 | BIT2 | BIT4; // configure interrupt to sense falling edges
+
+	//	P1REN |= BIT1 | BIT2 | BIT3;    // enable internal pull-up/pull-down network
+	//	P1OUT |= BIT1 | BIT2 | BIT3;                   // configure as pull-up
+
+	P1IFG &= ~(BIT0 | BIT1 | BIT2 | BIT4);
 }
