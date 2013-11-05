@@ -26,6 +26,7 @@ int main(void) {
 
 	P1IFG &= ~(BIT0 | BIT1 | BIT2 | BIT4);
 	__enable_interrupt();
+	printPlayer(player);
 
 	while (1) {
 		while (didPlayerWin(player) != 0xC7) {
