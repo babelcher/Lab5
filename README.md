@@ -3,6 +3,13 @@ Lab5
 
 Game on the LCD in the Black Box. Accomplishes B Functionality.
 
+## Documentation
+I used the buttons library provided by Capt Branchflower as well as the game_shell library that Capt Branchflower provided
+and then I modified the code accordingly. C2C Caleb Ziegler helped me identify why my game was resetting into the wrong location 
+and suggested that I turn off the interrupts for a short time period. This solved my issue. Other than that, everything 
+else was completed by myself.
+
+
 ## Functions
 - 'void endOfGame()'
     - Checks the condition for the end of the game
