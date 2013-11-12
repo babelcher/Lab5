@@ -15,6 +15,11 @@ char buttons[] = { BIT1, BIT2, BIT4, BIT0 };
 
 /*
  * main.c
+ * Created on: 10 November 2013
+ * Author: C15Brandon.Belcher
+ * Description: Implements a game on the LCD in the black
+ * box where the user must reach the bottom left block of the
+ * LCD.
  */
 int main(void) {
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
@@ -57,28 +62,13 @@ int main(void) {
 			endOfGame();
 		}
 
-		/*
-		 *
-		 * {
-		 * 		check if button is pushed (you don't want to block here, so don't poll!)
-		 * 		if button is pushed:
-		 * 			clear current player marker
-		 * 			update player position based on direction
-		 * 			print new player
-		 * 			clear two second timer
-		 * 			wait for button release (you can poll here)
-		 * }
-		 *
-		 * print game over or you won, depending on game result
-		 *
-		 * wait for button press to begin new game (you can poll here)
-		 * wait for release before starting again
-		 */
+
 	}
 
 	return 0;
 }
 
+//wait for a button push to start the game over
 void endOfGame(){
 	char buttonPressed = pollP1Buttons(buttons, 4);
 	char stillWaiting = 0;
@@ -94,18 +84,21 @@ void endOfGame(){
 	}
 }
 
+//reset the timer
 void clearTimer() {
 	timerCount = 0;
 	TACTL |= TACLR;
 
 }
 
+//move the player according to the button push and reset the 2 second timer
 void movePlayerInResponseToButtonPush(char buttonToTest) {
 	clearPlayer(player);
 	player = movePlayer(player, buttonToTest);
 	printPlayer(player);
 }
 
+//identify which button was pushed
 void testAndRespondToButtonPush(char buttonToTest) {
 	if (buttonToTest & P1IFG) {
 		if (buttonToTest & P1IES) {
@@ -130,6 +123,7 @@ __interrupt void TIMER0_A1_ISR() {
 
 }
 
+//sets up the timer
 void init_timer() {
 	TACTL &= ~(MC1 | MC0);        // stop timer
 
@@ -146,6 +140,7 @@ void init_timer() {
 	TACTL |= TAIE;              // enable interrupt
 }
 
+//initialize the 4 buttons to move the player
 void init_buttons() {
 	configureP1PinAsButton(BIT0 | BIT1 | BIT2 | BIT4);
 	P1IE |= BIT0 | BIT1 | BIT2 | BIT4;                 // enable the interrupts
@@ -154,6 +149,7 @@ void init_buttons() {
 	P1IFG &= ~(BIT0 | BIT1 | BIT2 | BIT4);
 }
 
+//interrupt the program if a button is pushed
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1_ISR(void) {
 	testAndRespondToButtonPush(BIT0);
